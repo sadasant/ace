@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>WalkCompiler with Ace</title>
+    <meta name="author" content="Daniel Rodríguez">
+
+    <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+    <script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script> 
+
+    <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
+</head>
+<body>
+<div id="optionsPanel" style="position:absolute;height:100%;width:260px">
+  <a href="http://ajaxorg.github.com/ace/" >
+    <img id="logo" src="demo/kitchen-sink/logo.png">
+  </a>
+
+  <div id="editor-container"></div>
+
+  <script type="text/javascript">
+      var require = {
+          baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
+          paths: {
+              ace: "lib/ace"
+          }
+      };
+  </script>
+  <script src="demo/walkcompiler/require.js" data-main="demo/walkcompiler/demo" type="text/javascript"></script>
+
+</body>
+</html>
