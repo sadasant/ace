@@ -67,22 +67,23 @@ env.editor.setAnimatedScroll(true);
 
 // Loading doc session
 var doc = {
-  name : "XML",
-  path : "demo/walkcompiler/docs/xml.xml",
-  mode : {
-    name : "xml",
-    desc : "XML",
-    mode : "ace/mode/xml",
-    exts : "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"
-  },
-  sess : null
+    name : "XML",
+    path : "demo/walkcompiler/docs/xml.xml",
+    mode : {
+        name : "xml",
+        desc : "XML",
+        path : "ace/mode/xml",
+        exts : "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"
+    },
+    session : null
 }
 net.get(doc.path, function(file) {
     var session = new EditSession(file);
     session.setUndoManager(new UndoManager());
     doc.session = session;
     session.modeName = doc.mode.name;
-    session.setMode(doc.mode.mode);
+    session.setMode(doc.mode);
+    env.split.setSession(session);
 });
 
 // add multiple cursor support to editor
@@ -103,7 +104,6 @@ var keybindings = {
 };
 
 
-
 /*********** manage layout ***************************/
 function onResize() {
     var left = env.split.$container.offsetLeft;
@@ -114,22 +114,5 @@ function onResize() {
 
 window.onresize = onResize;
 onResize();
-
-/*********** options panel ***************************/
-var docEl = document.getElementById("doc");
-var modeEl = document.getElementById("mode");
-var wrapModeEl = document.getElementById("soft_wrap");
-var themeEl = document.getElementById("theme");
-var foldingEl = document.getElementById("folding");
-var selectStyleEl = document.getElementById("select_style");
-var highlightActiveEl = document.getElementById("highlight_active");
-var showHiddenEl = document.getElementById("show_hidden");
-var showGutterEl = document.getElementById("show_gutter");
-var showPrintMarginEl = document.getElementById("show_print_margin");
-var highlightSelectedWordE = document.getElementById("highlight_selected_word");
-var showHScrollEl = document.getElementById("show_hscroll");
-var animateScrollEl = document.getElementById("animate_scroll");
-var softTabEl = document.getElementById("soft_tab");
-var behavioursEl = document.getElementById("enable_behaviours");
 
 });
