@@ -49,6 +49,7 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 var Renderer    = require("ace/virtual_renderer").VirtualRenderer;
 var Editor      = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
+var modelist    = require("./modelist");
 
 /*********** create editor ***************************/
 var container = document.getElementById("editor-container");
@@ -65,24 +66,13 @@ window.env = env;
 window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
 
-// Loading doc session
-var doc = {
-    name : "XML",
-    path : "demo/walkcompiler/docs/xml.xml",
-    mode : {
-        name : "xml",
-        desc : "XML",
-        path : "ace/mode/xml",
-        exts : "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"
-    },
-    session : null
-}
-net.get(doc.path, function(file) {
+var edit_file_path = "demo/walkcompiler/docs/xml.xml"
+net.get(edit_file_path, function(file) {
+    var mode = modelist.getModeFromPath(edit_file_path);
     var session = new EditSession(file);
     session.setUndoManager(new UndoManager());
-    doc.session = session;
-    session.modeName = doc.mode.name;
-    session.setMode(doc.mode);
+    session.modeName = mode.name;
+    session.setMode(mode.mode);
     env.split.setSession(session);
 });
 
