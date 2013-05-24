@@ -66,7 +66,7 @@ window.env = env;
 window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
 
-var edit_file_path = "demo/walkcompiler/docs/xml.xml"
+var edit_file_path = "demo/walkcompiler/docs/posxml_en.xsd"
 net.get(edit_file_path, function(file) {
     var mode = modelist.getModeFromPath(edit_file_path);
     var session = new EditSession(file);
