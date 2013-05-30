@@ -5,11 +5,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>WalkCompiler</title>
     <meta name="author" content="">
+    <!--
+    Ace
+      version %version%
+      commit  %commit%
+    -->
 
+    <!--DEVEL-->
     <link rel="stylesheet" href="demo/walkcompiler/styles.css" type="text/css" media="screen" charset="utf-8">
-    <script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script> 
+    <script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script>
+    <!--DEVEL-->
 
     <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
+    <!--PACKAGE
+      <link rel="stylesheet" href="walkcompiler/styles.css" type="text/css" media="screen" charset="utf-8">
+      <script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script>
+    PACKAGE-->
 </head>
 <body>
   <div id="editor-container"></div>
@@ -24,6 +35,18 @@
       };
   </script>
   <script src="demo/walkcompiler/require.js" data-main="demo/walkcompiler/walk" type="text/javascript"></script>
+
+<!--DEVEL-->
+
+<!--PACKAGE
+  <script src="src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
+  <script src="src/keybinding-vim.js"></script>
+  <script src="src/keybinding-emacs.js"></script>
+  <script src="walkcompiler/walk.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    require("walkcompiler/walk");
+  </script>
+    PACKAGE-->
 
 </body>
 </html>

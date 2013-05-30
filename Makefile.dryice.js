@@ -66,6 +66,8 @@ function main(args) {
             ace();
         } else if (type == "demo") {
             demo();
+        } else if (type == "walk") {
+            walk();
         } else if (type == "bm") {
             bookmarklet();
         } else if (type == "full") {
@@ -230,6 +232,80 @@ function demo(project) {
     copyFileSync(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
 }
 
+// node ./Makefile.dryice.js walk
+function walk(project) {
+    project = project || buildAce({
+        compress: false,
+        noconflict: false,
+        coreOnly: true
+    });
+    console.log('# walkcompiler ---------');
+
+    var version, ref;
+    try {
+        version = JSON.parse(fs.readFileSync(ACE_HOME + "/package.json")).version;
+        ref = fs.readFileSync(ACE_HOME + "/.git-ref").toString();
+    } catch(e) {
+        ref = "";
+        version = "";
+    }
+
+    function changeComments(data) {
+        return (data
+            .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
+            .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
+            .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
+            .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
+            .replace("%version%", version)
+            .replace("%commit%", ref)
+        );
+    };
+
+    function fixDocPaths(data) {
+        return data.replace(/"(demo|build)\//g, "\"");
+    }
+
+    copy({
+        source: ACE_HOME + "/walkcompiler.html",
+        dest:   BUILD_DIR + "/walkcompiler.html",
+        filter: [changeComments, fixDocPaths]
+    });
+
+    copy({
+        source: ACE_HOME + "/demo/walkcompiler/styles.css",
+        dest:   BUILD_DIR + "/walkcompiler/styles.css",
+        filter: [ changeComments ]
+    });
+
+    fs.readdirSync(ACE_HOME +"/demo/walkcompiler/docs/").forEach(function(x) {
+        copy({
+            source: ACE_HOME +"/demo/walkcompiler/docs/" + x,
+            dest:   BUILD_DIR + "/walkcompiler/docs/" + x
+        });
+    });
+
+    var walk = copy.createDataObject();
+    
+    project.assumeAllFilesLoaded();
+    copy({
+        source: [{
+            project: cloneProject(project),
+            require: [ "walkcompiler/walk" ]
+        }],
+        filter: getWriteFilters({filters:[fixDocPaths]}, "walk"),
+        dest: walk
+    });
+
+    copy({
+        source: walk,
+        dest:   BUILD_DIR + "/walkcompiler/walk.js",
+    });
+
+    copyFileSync(ACE_HOME + "/demo/walkcompiler/logo.png", BUILD_DIR + "/walkcompiler/logo.png");
+}
+
+
+
 function jsFileList(path, filter) {
     path = ACE_HOME + "/" + path;
     if (!filter)
@@ -305,7 +381,8 @@ var buildAce = function(options) {
         modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/),
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
-        workers: workers("lib/ace/mode"),
+        mode_workers: workers("lib/ace/mode"),
+        autocomplete_workers: workers("lib/ace/autocomplete"),
         keybindings: ["vim", "emacs"]
     };
 
@@ -407,7 +484,7 @@ var buildAce = function(options) {
 
     console.log('# ace worker ---------');
 
-    options.workers.forEach(function(mode) {
+    options.mode_workers.forEach(function(mode) {
         console.log("worker for " + mode + " mode");
         var worker = copy.createDataObject();
         var workerProject = copy.createCommonJsProject({
@@ -436,6 +513,37 @@ var buildAce = function(options) {
             dest: targetDir + "/worker-" + mode + ".js"
         });
     });
+
+    options.autocomplete_workers.forEach(function(autocomplete) {
+        console.log("worker for " + autocomplete + " autocomplete");
+        var worker = copy.createDataObject();
+        var workerProject = copy.createCommonJsProject({
+            roots: [ ACE_HOME + '/lib' ],
+            textPluginPattern: /^ace\/requirejs\/text!/
+        });
+        copy({
+            source: [{
+                project: workerProject,
+                require: [
+                    'ace/lib/fixoldbrowsers',
+                    'ace/lib/event_emitter',
+                    'ace/lib/oop',
+                    'ace/autocomplete/' + autocomplete + '_worker'
+                ]
+            }],
+            filter: getWriteFilters(options, "worker"),
+            dest: worker
+        });
+        copy({
+            source: [
+                ACE_HOME + "/lib/ace/worker/worker.js",
+                worker
+            ],
+            filter: options.compress ? [copy.filter.uglifyjs] : [],
+            dest: targetDir + "/worker-" + autocomplete + ".js"
+        });
+    });
+
 
 
     if (options.shrinkwrap) {
