@@ -96,6 +96,7 @@ var modesByName = {
     typescript: ["Typescript"   , "typescript|ts|str"],
     vbscript:   ["VBScript"     , "vbs"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
+    posxml:     ["POSXML"       , "posxml"],
     xquery:     ["XQuery"       , "xq"],
     yaml:       ["YAML"         , "yaml"]
 };
