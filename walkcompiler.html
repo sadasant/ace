@@ -2,51 +2,157 @@
 
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>WalkCompiler</title>
-    <meta name="author" content="">
-    <!--
-    Ace
-      version %version%
-      commit  %commit%
-    -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!--DEVEL-->
-    <link rel="stylesheet" href="demo/walkcompiler/styles.css" type="text/css" media="screen" charset="utf-8">
-    <script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script>
-    <!--DEVEL-->
+	<title>WalkCompiler</title>
+	<meta name="description" content="">
+	<meta name="author" content="PlanoBe.com.br">
 
-    <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
-    <!--PACKAGE
-      <link rel="stylesheet" href="walkcompiler/styles.css" type="text/css" media="screen" charset="utf-8">
-      <script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script>
-    PACKAGE-->
+	<!--
+	Ace
+		version %version%
+		commit  %commit%
+	-->
+
+	<!--[if lt IE 9]><script src="assets/js/html5shiv.js"></script><![endif]-->
+	<link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
+	<!--DEVEL-->
+	<link rel="stylesheet" href="demo/walkcompiler/lib/bootstrap.css"/>
+	<link rel="stylesheet" href="demo/walkcompiler/lib/jquery.terminal.css"/>
+	<link rel="stylesheet" href="demo/walkcompiler/styles.css" type="text/css" media="screen" charset="utf-8">
+	<script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script>
+	<!--DEVEL--><!--PACKAGE
+	<link rel="stylesheet" href="walkcompiler/lib/bootstrap.css"/>
+	<link rel="stylesheet" href="walkcompiler/lib/jquery.terminal.css"/>
+	<link rel="stylesheet" href="walkcompiler/styles.css" type="text/css" media="screen" charset="utf-8">
+	<script async="true" src="http://use.edgefonts.net/source-code-pro.js"></script>
+	PACKAGE-->
 </head>
 <body>
-  <div id="editor-container"></div>
 
+	<!-- Nav Bar -->
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="">
+					<div class="brand-white">WalkCompiler</div>
+					<div class="brand-grey">by PlanoBe.com.br</div>
+				</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li>
+							<a href="">Manual</a>
+						</li>
+						<li>
+							<a href="">Support</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="walkcompiler-compile">
+		<a href="" class="btn">Compile</a>
+	</div>
+
+	<div id="editor-container"></div>
+	<div id="terminal-container">
+		<div class="terminal-header">
+			<button class="btn btn-mini">Open Terminal</button>
+		</div>
+		<div class="terminal-element"></div>
+	</div>
 <!--DEVEL-->
-  <script type="text/javascript">
-      var require = {
-          baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
-          paths: {
-              ace: "lib/ace"
-          }
-      };
-  </script>
-  <script src="demo/walkcompiler/require.js" data-main="demo/walkcompiler/walk" type="text/javascript"></script>
-
-<!--DEVEL-->
-
-<!--PACKAGE
-  <script src="src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
-  <script src="src/keybinding-vim.js"></script>
-  <script src="src/keybinding-emacs.js"></script>
-  <script src="walkcompiler/walk.js"></script>
-  <script type="text/javascript" charset="utf-8">
-    require("walkcompiler/walk");
-  </script>
-    PACKAGE-->
-
+	<script type="text/javascript">
+		var require = {
+			baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
+			paths: {
+				ace: "lib/ace"
+			}
+		};
+	</script>
+	<script src="demo/walkcompiler/require.js" data-main="demo/walkcompiler/walk" type="text/javascript"></script>
+	<script src="demo/walkcompiler/lib/jquery.min.js"></script>
+	<script src="demo/walkcompiler/lib/jquery.mousewheel.js"></script>
+	<script src="demo/walkcompiler/lib/jquery.terminal-0.6.3.min.js"></script>
+<!--DEVEL--><!--PACKAGE
+	<script src="src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
+	<script src="src/keybinding-vim.js"></script>
+	<script src="src/keybinding-emacs.js"></script>
+	<script src="walkcompiler/walk.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		require("walkcompiler/walk");
+	</script>
+	<script src="walkcompiler/lib/jquery.min.js"></script>
+	<script src="walkcompiler/lib/jquery.mousewheel.js"></script>
+	<script src="walkcompiler/lib/jquery.terminal-0.6.3.min.js"></script>
+PACKAGE-->
+	<script type="text/javascript">
+	jQuery(function($, undefined) {
+		var $container = $('#terminal-container')
+		var $terminal = $container.find('.terminal-element');
+		var $button = $container.find('.terminal-header button');
+		var is_open = false;
+		var is_created = false;
+		var title = {
+			opened : "Close Terminal",
+			closed : "Open Terminal"
+		}
+		var TERM;
+		$button.click(function(e) {
+			if (is_created) {
+				if (is_open) {
+					// Close
+					is_open = false;
+					$container.css('height', 26);
+					$button.html(title.closed);
+					// TERM.logout();
+					// TERM.clear();
+				} else {
+					// Open
+					is_open = true;
+					$button.html(title.opened);
+					$container.css('height', 154);
+					// TERM.focus();
+				}
+				return
+			}
+			is_created = true;
+			is_open = true;
+			$terminal.terminal(function(command, term) {
+				TERM = term;
+				if (command !== '') {
+					try {
+						var result = window.eval(command);
+						if (result !== undefined) {
+						term.echo(new String(result));
+					}
+				} catch(e) {
+					term.error(new String(e));
+				}
+				} else {
+					term.echo('');
+				}
+			}, {
+				greetings: 'WalkCompiler Interpreter',
+				name: 'js_demo',
+				height: 200,
+				prompt: 'walk> ',
+				onInit: function(term) {
+					// term.focus(false);
+					$button.html(title.opened);
+					$container.css('height', 154);
+				}
+			});
+		});
+	});
+	</script>
 </body>
 </html>

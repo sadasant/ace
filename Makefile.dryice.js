@@ -284,6 +284,13 @@ function walk(project) {
         });
     });
 
+    fs.readdirSync(ACE_HOME +"/demo/walkcompiler/lib/").forEach(function(x) {
+        copy({
+            source: ACE_HOME +"/demo/walkcompiler/lib/" + x,
+            dest:   BUILD_DIR + "/walkcompiler/lib/" + x
+        });
+    });
+
     var walk = copy.createDataObject();
     
     project.assumeAllFilesLoaded();
