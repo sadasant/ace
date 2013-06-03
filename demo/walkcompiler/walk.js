@@ -108,3 +108,13 @@ window.onresize = onResize;
 onResize();
 
 });
+
+/* INTEGRATING ACE WITH SHAREJS */
+window.loadSharejs = function(sharejs) {
+  var host = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");
+  if (!sharejs) return;
+  sharejs.open('hello', 'text', host + '/channel', function(error, doc) {
+      doc.attach_ace(env.editor);
+  });
+};
+
