@@ -9,6 +9,10 @@ var server = connect(
 , connect.static(__dirname + '/build')
 )
 
+server.use('/doc_name', function(req, res) {
+  res.end("docname");
+})
+
 var options = {db: {type: 'redis'}}
 
 // Attach the sharejs REST and Socket.io interfaces to the server
