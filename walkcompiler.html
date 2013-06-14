@@ -106,12 +106,12 @@ PACKAGE-->
 			}
 
 			// Prepare Compile Button
-			$('.walkcompiler-compile .btn').click(function(){
+			$('.walkcompiler-compile .btn').click(function(e){
 				e.preventDefault();
 				$.get('/compile', function(data){
-					console.log(data);
-				})
-			})
+					console.log(data)
+				});
+			});
 
 			// jQuery Terminal
 			var $container = $('#terminal-container')
