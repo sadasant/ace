@@ -100,13 +100,20 @@ PACKAGE-->
 	<script src="/share/ace.js"></script>
 	<script type="text/javascript">
 		jQuery(function($, undefined) {
+			// Load ShareJS
 			if (window.loadSharejs) {
 				window.loadSharejs(sharejs)
 			}
-		});
-	</script>
-	<script type="text/javascript">
-		jQuery(function($, undefined) {
+
+			// Prepare Compile Button
+			$('.walkcompiler-compile .btn').click(function(){
+				e.preventDefault();
+				$.get('/compile', function(data){
+					console.log(data);
+				})
+			})
+
+			// jQuery Terminal
 			var $container = $('#terminal-container')
 			var $terminal = $container.find('.terminal-element');
 			var $button = $container.find('.terminal-header button');
