@@ -110,13 +110,16 @@ onResize();
 });
 
 /* INTEGRATING ACE WITH SHAREJS */
-window.loadSharejs = function(sharejs) {
+window.loadSharejs = function(sharejs, callback) {
   var host = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");
   if (!sharejs) return;
   $.get("/doc_name", function(docname) {
     sharejs.open(docname, 'text', host + '/channel', function(error, doc) {
         doc.attach_ace(env.editor);
+        if (callback) {
+            callback(env);
+        }
     });
-  })
+  });
 };
 
