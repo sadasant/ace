@@ -42,7 +42,7 @@ var net         = require("ace/lib/net");
 var lang        = require("ace/lib/lang");
 var useragent   = require("ace/lib/useragent");
 var event       = require("ace/lib/event");
-var theme       = require("ace/theme/textmate");
+var theme       = require("ace/theme/monokai");
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
@@ -75,6 +75,7 @@ net.get(edit_file_path, function(file) {
     session.setMode(mode.mode);
     session.setUseSoftTabs(true);
     session.setTabSize(2);
+    env.split.setFontSize("13px");
     env.split.setSession(session);
 });
 
