@@ -66,18 +66,15 @@ window.env = env;
 window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
 
-var edit_file_path = "demo/walkcompiler/docs/posxml_en.posxml";
-net.get(edit_file_path, function(file) {
-    var mode = modelist.getModeFromPath(edit_file_path);
-    var session = new EditSession(file);
-    session.setUndoManager(new UndoManager());
-    session.modeName = mode.name;
-    session.setMode(mode.mode);
-    session.setUseSoftTabs(true);
-    session.setTabSize(2);
-    env.split.setFontSize("13px");
-    env.split.setSession(session);
-});
+var session = new EditSession("");
+var mode = "posxml";
+session.setUndoManager(new UndoManager());
+session.modeName = mode;
+session.setMode("ace/mode/"+mode);
+session.setUseSoftTabs(true);
+session.setTabSize(2);
+env.split.setFontSize("13px");
+env.split.setSession(session);
 
 // add multiple cursor support to editor
 require("ace/multi_select").MultiSelect(env.editor);
